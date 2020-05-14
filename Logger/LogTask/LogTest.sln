@@ -12,8 +12,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{910611D8-D737-4D25-890D-F479F3FBDADB}"
 	ProjectSection(SolutionItems) = preProject
 		Comments.txt = Comments.txt
-		..\..\..\..\..\..\..\..\LogTest\Log20200514 160407 608.log = ..\..\..\..\..\..\..\..\LogTest\Log20200514 160407 608.log
-		..\..\..\..\..\..\..\..\LogTest\Log20200514 160408 390.log = ..\..\..\..\..\..\..\..\LogTest\Log20200514 160408 390.log
+		Log20200514 170304 838.log = Log20200514 170304 838.log
+		Log20200514 170305 628.log = Log20200514 170305 628.log
 	EndProjectSection
 EndProject
 Global
