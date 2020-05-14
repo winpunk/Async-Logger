@@ -1,11 +1,20 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30002.166
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogComponent", "LogTest\LogComponent.csproj", "{EE0CC7D7-A1A0-4A16-80E5-8B80B480EB47}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\Application.csproj", "{E7E1A7F7-66B8-40C3-B30A-3633C4396AC5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogComponentTest", "LogComponentTest\LogComponentTest.csproj", "{4846E1A7-18FC-4DF0-9475-10C953D2512C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{910611D8-D737-4D25-890D-F479F3FBDADB}"
+	ProjectSection(SolutionItems) = preProject
+		Comments.txt = Comments.txt
+		..\..\..\..\..\..\..\..\LogTest\Log20200514 160407 608.log = ..\..\..\..\..\..\..\..\LogTest\Log20200514 160407 608.log
+		..\..\..\..\..\..\..\..\LogTest\Log20200514 160408 390.log = ..\..\..\..\..\..\..\..\LogTest\Log20200514 160408 390.log
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,8 +30,15 @@ Global
 		{E7E1A7F7-66B8-40C3-B30A-3633C4396AC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E7E1A7F7-66B8-40C3-B30A-3633C4396AC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E7E1A7F7-66B8-40C3-B30A-3633C4396AC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4846E1A7-18FC-4DF0-9475-10C953D2512C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4846E1A7-18FC-4DF0-9475-10C953D2512C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4846E1A7-18FC-4DF0-9475-10C953D2512C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4846E1A7-18FC-4DF0-9475-10C953D2512C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F63ADF7A-2E73-49B6-80E5-B23B3F210495}
 	EndGlobalSection
 EndGlobal

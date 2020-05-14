@@ -1,26 +1,14 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-
-namespace LogTest
+﻿namespace LogTest
 {
     public interface ILog
     {
-        /// <summary>
-        /// Stop the logging. If any outstadning logs theses will not be written to Log
-        /// </summary>
+        // Stop the logging. If any outstanding logs theses will not be written to Log
         void StopWithoutFlush();
 
-        /// <summary>
-        /// Stop the logging. The call will not return until all all logs have been written to Log.
-        /// </summary>
+        ///Stop the logging. The call will not return until all logs have been written to Log.
         void StopWithFlush();
 
-        /// <summary>
-        /// Write a message to the Log.
-        /// </summary>
-        /// <param name="text">The text to written to the log</param>
+        // Write a message to the Log.
         void Write(string text);
-
-
     }
 }

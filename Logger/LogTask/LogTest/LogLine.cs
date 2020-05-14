@@ -1,68 +1,35 @@
 ﻿namespace LogTest
 {
     using System;
-    using System.Text;
 
-    /// <summary>
-    /// This is the object that the diff. loggers (filelogger, consolelogger etc.) will operate on. The LineText() method will be called to get the text (formatted) to log
-    /// </summary>
+    // This object is for storing and formating log text.
     public class LogLine
     {
-        #region Private Fields
-
-        #endregion
-
-        #region Constructors
-
-        public LogLine()
+        public LogLine(String text, DateTime timeStamp)
         {
-            this.Text = "";
-        }
-
-        #endregion
-
-        #region Public Methods
-
-        /// <summary>
-        /// Return a formatted line
-        /// </summary>
-        /// <returns></returns>
-        public virtual string LineText()
-        {
-            StringBuilder sb = new StringBuilder();
-
-            if (this.Text.Length > 0)
-            {
-                sb.Append(this.Text);
-                sb.Append(". ");
-            }
-
-            sb.Append(this.CreateLineText());
-
-            return sb.ToString();
-        }
-
-        public virtual string CreateLineText()
-        {
-            return "";
+            Text = text;
+            TimeStamp = timeStamp;
         }
 
 
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// The text to be display in logline
-        /// </summary>
+        // The text to be display in logline.
         public string Text { get; set; }
 
-        /// <summary>
-        /// The Timestamp is initialized when the log is added. Th
-        /// </summary>
-        public virtual DateTime Timestamp { get; set; }
-  
+        // The Timestamp is initialized when the log is added. Can be overridden.
+        public virtual DateTime TimeStamp { get; set; }
 
-        #endregion
+
+        // Returns a formatted line. Can be overridden.
+        public virtual string LineText()
+        {
+            // No need for StringBuilder, concatenation is as fast as StringBuilder in this case.
+            return ("\t" + Text + ". " + Environment.NewLine);
+        }
+
+        // Returns a formatted line. Can be overridden.
+        public virtual string TimeStampText()
+        {
+            return (TimeStamp.ToString("yyyy-MM-dd HH:mm:ss:fff").PadRight(25, ' '));
+        }
     }
 }

@@ -1,20 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LogUsers
 {
+    using LogTest;
     using System.Threading;
 
-    using LogTest;
-
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            ILog  logger = new AsyncLog();
+            ILog logger = new AsyncLog();
 
             for (int i = 0; i < 15; i++)
             {

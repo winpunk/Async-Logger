@@ -1,0 +1,15 @@
+
+Comments regarding the task:
+
+	* It took me 3 evenings to finish the task (Starting from Tuesday evening).
+	* Fixed bug, changed "List<LogLine>" to "BlockingCollection<LogLine>" for thread-safe operation.
+	* Removed "if (!Directory.Exists(@"C:\LogTest"))", because it is not necessary.
+	* Every write operation is done with "using" statement (without AutoFlush)
+	* Created header string for new log file headers.
+	* Created new function for checking if it is new day and creating new file.
+	* Fix bug in checking if it is new day (should subtract DateTime.Date, not just DateTime).
+	* Implemented more formatting in LogLine object.
+	* Not using StringBuilder, because concatenation of small sets of strings are as good as StringBuilder regarding the performance (sometimes even better).
+	* Implemented exception catching to prevent LogComponent from blocking a Application.
+	* Wrote 3 test in LogTest class. Every test has passed 10 times.
+	* Renamed variables, tidied the code, removed unnecessary "this.", removed unnecessary statements (i.e. "if (f > 5) continue;") and some changes for better readability. 

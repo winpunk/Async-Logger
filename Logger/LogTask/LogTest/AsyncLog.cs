@@ -1,114 +1,121 @@
 ﻿namespace LogTest
 {
     using System;
-    using System.Collections.Generic;
+    using System.Collections.Concurrent;
+    using System.Diagnostics;
     using System.IO;
-    using System.Text;
     using System.Threading;
 
     public class AsyncLog : ILog
     {
         private Thread _runThread;
-        private List<LogLine> _lines = new List<LogLine>();
 
-        private StreamWriter _writer; 
+        //  For thread-safe operation better to use BlockingCollection<>.
+        private BlockingCollection<LogLine> _logLines = new BlockingCollection<LogLine>();
 
-        private bool _exit;
+        private string _filepath;
+
+        // Header for every new file created.
+        private static readonly string _header = "Timestamp".PadRight(25, ' ') + "\t" + "Data".PadRight(15, ' ') + "\t" + Environment.NewLine;
+
+        private bool _isExit = false;
+
+        private bool _isQuitWithFlush = false;
+
+        private DateTime _currentDate = DateTime.Now;
 
         public AsyncLog()
         {
-            if (!Directory.Exists(@"C:\LogTest")) 
+            try
+            {
+                //  No need for checking if directory exists, "CreateDirectory" does it for you.
                 Directory.CreateDirectory(@"C:\LogTest");
 
-            this._writer = File.AppendText(@"C:\LogTest\Log" + DateTime.Now.ToString("yyyyMMdd HHmmss fff") + ".log");
-            
-            this._writer.Write("Timestamp".PadRight(25, ' ') + "\t" + "Data".PadRight(15, ' ') + "\t" + Environment.NewLine);
+                _filepath = @"C:\LogTest\Log" + _currentDate.ToString("yyyyMMdd HHmmss fff") + ".log";
 
-            this._writer.AutoFlush = true;
+                //  It is better to use StreamWriter with using statement (AutoFlush by default - false, for better performance).
+                using (StreamWriter _writer = new StreamWriter(_filepath, true))
+                {
+                    _writer.Write(_header);
+                }
 
-            this._runThread = new Thread(this.MainLoop);
-            this._runThread.Start();
+                //  Starting new Thread to write logs Asynchronously.
+                _runThread = new Thread(WriterLoop);
+                _runThread.Start();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Exception: " + ex.Message);
+                return;
+            }
         }
 
-        private bool _QuitWithFlush = false;
-
-
-        DateTime _curDate = DateTime.Now;
-
-        private void MainLoop()
+        private void WriterLoop()
         {
-            while (!this._exit)
+            while (!_isExit)
             {
-                if (this._lines.Count > 0)
+                try
                 {
-                    int f = 0;
-                    List<LogLine> _handled = new List<LogLine>();
-
-                    foreach (LogLine logLine in this._lines)
+                    //  For thread-safe operation better to use BlockingCollection<>. Also it automatically removes item from a list.
+                    while (_logLines.TryTake(out var logLine) && !_isExit)
                     {
-                        f++;
+                        // Moved code for checking if it is a new day to a function. For better readability and testing.
+                        MidnightCrossingCheck(DateTime.Now);
 
-                        if (f > 5)
-                            continue;
-                        
-                        if (!this._exit || this._QuitWithFlush)
+                        // Write log using StreamWriter.
+                        using (StreamWriter _writer = new StreamWriter(_filepath, true))
                         {
-                            _handled.Add(logLine);
-
-                            StringBuilder stringBuilder = new StringBuilder();
-
-                            if ((DateTime.Now - _curDate).Days != 0)
-                            {
-                                _curDate = DateTime.Now;
-
-                                this._writer = File.AppendText(@"C:\LogTest\Log" + DateTime.Now.ToString("yyyyMMdd HHmmss fff") + ".log");
-
-                                this._writer.Write("Timestamp".PadRight(25, ' ') + "\t" + "Data".PadRight(15, ' ') + "\t" + Environment.NewLine);
-
-                                stringBuilder.Append(Environment.NewLine);
-
-                                this._writer.Write(stringBuilder.ToString());
-
-                                this._writer.AutoFlush = true;
-                            }
-
-                            stringBuilder.Append(logLine.Timestamp.ToString("yyyy-MM-dd HH:mm:ss:fff"));
-                            stringBuilder.Append("\t");
-                            stringBuilder.Append(logLine.LineText());
-                            stringBuilder.Append("\t");
-
-                            stringBuilder.Append(Environment.NewLine);
-
-                            this._writer.Write(stringBuilder.ToString());
+                            _writer.Write(logLine.TimeStampText() + logLine.LineText());
                         }
                     }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("Exception: " + ex.Message);
+                }
 
-                    for (int y = 0; y < _handled.Count; y++)
+                if (_isQuitWithFlush == true && _logLines.Count == 0) _isExit = true;
+            }
+        }
+
+        // Passing DateTime for testing purposes.
+        private void MidnightCrossingCheck(DateTime dateTimeNow)
+        {
+            // You have to subtract Dates to get result in Days.
+            if ((dateTimeNow.Date - _currentDate.Date).Days != 0)
+            {
+                _currentDate = dateTimeNow;
+
+                _filepath = @"C:\LogTest\Log" + _currentDate.ToString("yyyyMMdd HHmmss fff") + ".log";
+
+                try
+                {
+                    using (StreamWriter _writer = new StreamWriter(_filepath, true))
                     {
-                        this._lines.Remove(_handled[y]);   
+                        _writer.Write(_header);
                     }
-
-                    if (this._QuitWithFlush == true && this._lines.Count == 0) 
-                        this._exit = true;
-
-                    Thread.Sleep(50);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("Exception: " + ex.Message);
                 }
             }
         }
 
         public void StopWithoutFlush()
         {
-            this._exit = true;
+            _isExit = true;
         }
 
         public void StopWithFlush()
         {
-            this._QuitWithFlush = true;
+            _isQuitWithFlush = true;
         }
 
         public void Write(string text)
         {
-            this._lines.Add(new LogLine() { Text = text, Timestamp = DateTime.Now });
+            // With Write just add log to the queue
+            _logLines.TryAdd(new LogLine(text, DateTime.Now));
         }
     }
 }
