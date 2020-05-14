@@ -13,7 +13,7 @@
         //  For thread-safe operation better to use BlockingCollection<>.
         private BlockingCollection<LogLine> _logLines = new BlockingCollection<LogLine>();
 
-        private string _filepath;
+        private string _filepath = "";
 
         // Header for every new file created.
         private static readonly string _header = "Timestamp".PadRight(25, ' ') + "\t" + "Data".PadRight(15, ' ') + "\t" + Environment.NewLine;
@@ -115,7 +115,15 @@
         public void Write(string text)
         {
             // With Write just add log to the queue
-            _logLines.TryAdd(new LogLine(text, DateTime.Now));
+            try
+            {
+                _logLines.TryAdd(new LogLine(text, DateTime.Now));
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Exception: " + ex.Message);
+            }
+
         }
     }
 }
