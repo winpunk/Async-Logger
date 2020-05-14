@@ -1,7 +1,7 @@
 
 Comments regarding the task:
 
-	* It took me 3 evenings to finish the task (Starting from Tuesday evening).
+	* It took me 3 evenings to finish the task.
 	* Fixed bug, changed "List<LogLine>" to "BlockingCollection<LogLine>" for thread-safe operation.
 	* Removed "if (!Directory.Exists(@"C:\LogTest"))", because it is not necessary.
 	* Every write operation is done with "using" statement (without AutoFlush)

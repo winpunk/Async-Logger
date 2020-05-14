@@ -33,6 +33,7 @@ namespace LogComponentTest
         // For testing if new files are created if midnight is crossed
         public void TestMidnightFileCreation()
         {
+            bool isNewFileCreated = false;
             var sut = new AsyncLog();
 
             // Writing with flush.
@@ -47,26 +48,19 @@ namespace LogComponentTest
             PrivateObject obj = new PrivateObject(sut);
             obj.Invoke("MidnightCrossingCheck", fakeDateTime);
 
-            string[] dayNumber = new string[2];
+            // Check if new file with fake date is created.
             string[] filePaths = Directory.GetFiles(@"C:\LogTest\").OrderBy(f => new FileInfo(f).LastWriteTime).ToArray();
-
-            /* Can not just take 2 last modified files, because when run simultaneously other tests interfering with it. 
-             * We have to read file text and check if it is our file. */
 
             foreach (var filePath in filePaths)
             {
-                if (File.ReadAllText(filePath).Contains("TESTMidnight"))
+                if (filePath.Contains(fakeDateTime.ToString("yyyyMMdd")))
                 {
-                    dayNumber[0] = Path.GetFileName(filePath).Substring(9, 2);
-                }
-                else if (!File.ReadAllText(filePath).Contains("TEST") && !File.ReadAllText(filePath).Any(char.IsDigit))
-                {
-                    dayNumber[1] = Path.GetFileName(filePath).Substring(9, 2);
+                    isNewFileCreated = true;
                 }
             }
 
-            // Check if differences in dates is one day.
-            Assert.AreEqual(1, (int.Parse(dayNumber[1]) - int.Parse(dayNumber[0])));
+            // Check if new file is created.
+            Assert.AreEqual(true, isNewFileCreated);
         }
 
         [TestMethod]
@@ -91,6 +85,7 @@ namespace LogComponentTest
             int numberOfLines = System.IO.File.ReadAllLines(filenames.First()).Count();
 
             Assert.AreEqual(16, numberOfLines);
+
 
             // Repeat the same for write without flush.
             var sut2 = new AsyncLog();
