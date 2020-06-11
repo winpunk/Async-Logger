@@ -16,28 +16,28 @@ namespace LogTest
         public bool IsExit { get; set; } = false;
         public bool IsDoneWritting { get; set; } = false;
         public bool IsQuitWithFlush { get; set; } = false;
-        
-        private string _filePath = @"C:\LogTest\Log" + DateTime.Now.ToString("yyyyMMdd HHmmss fff") + ".log";        
+
+        private string _filePath = @"C:\LogTest\Log" + DateTime.Now.ToString("yyyyMMdd HHmmss fff") + ".log";
 
         public LoggerAgent(IFileSystem fileSystem, ILogFile logFile)
         {
             _logFile = logFile;
             _newDayChecker = new NewDayChecker(DateTime.Now, fileSystem);
             _fileSystem = fileSystem;
-
-            if (_logFile.CreateNewDirectory(_fileSystem))
-                _writer = _fileSystem.File.CreateText(_filePath);
         }
 
         public void LoggerLoop()
         {
-            using (_writer)
+            try
             {
-                _logFile.CreateNewFile(_writer);
+                if (_logFile.CreateNewDirectory(_fileSystem))
+                    _writer = _fileSystem.File.CreateText(_filePath);
 
-                while (!IsExit)
+                using (_writer)
                 {
-                    try
+                    _logFile.CreateNewFile(_writer);
+
+                    while (!IsExit)
                     {
                         while (logLines.TryTake(out var logLine, 10) && !IsExit)
                         {
@@ -45,17 +45,19 @@ namespace LogTest
 
                             _logFile.WriteLog(_writer, logLine.TimeStampText() + logLine.LineText());
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.WriteLine("Exception: " + ex.Message);
-                    }
 
-                    if (IsQuitWithFlush == true && logLines.Count == 0) IsExit = true;
+                        if (IsQuitWithFlush == true && logLines.Count == 0) IsExit = true;
+                    }
                 }
             }
-
-            IsDoneWritting = true;
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Exception: " + ex.Message);
+            }
+            finally
+            {
+                IsDoneWritting = true;
+            }
         }
     }
 }

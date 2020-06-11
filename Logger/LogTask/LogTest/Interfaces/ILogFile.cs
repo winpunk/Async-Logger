@@ -5,7 +5,7 @@ namespace LogTest
 {
     public interface ILogFile
     {
-        bool CreateNewFile(StreamWriter streamWriter);
+        void CreateNewFile(StreamWriter streamWriter);
 
         void WriteLog(StreamWriter streamWriter, string log);
 

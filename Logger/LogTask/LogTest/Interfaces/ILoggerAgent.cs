@@ -8,6 +8,7 @@ namespace LogTest
         bool IsExit { get; set; }
         bool IsDoneWritting { get; set; }
         bool IsQuitWithFlush { get; set; }
+
         void LoggerLoop();
     }
 }

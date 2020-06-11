@@ -9,10 +9,8 @@ namespace LogTest
     {
         private static readonly string _header = "Timestamp".PadRight(25, ' ') + "\t" + "Data".PadRight(15, ' ') + "\t" + Environment.NewLine;
 
-        
         public LogFile()
         {
-            
         }
 
         public bool CreateNewDirectory(IFileSystem fileSystem)
@@ -30,19 +28,9 @@ namespace LogTest
             return true;
         }
 
-        public bool CreateNewFile(StreamWriter streamWriter)
+        public void CreateNewFile(StreamWriter streamWriter)
         {
-            try
-            {
-                streamWriter.Write(_header);
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("Exception: " + ex.Message);
-                return false;
-            }
-
-            return true;
+            streamWriter.Write(_header);
         }
 
         public void WriteLog(StreamWriter streamWriter, string log)

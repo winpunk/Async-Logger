@@ -16,7 +16,7 @@
         }
 
         public AsyncFileLogger(IFileSystem fileSystem, ILogFile logFile)
-        {            
+        {
             _loggerAgent = new LoggerAgent(fileSystem, logFile);
 
             _runThread = new Thread(_loggerAgent.LoggerLoop);
