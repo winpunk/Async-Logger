@@ -22,6 +22,7 @@ namespace LogTest
                 _currentDate = dateTimeNow;
 
                 writer = _fileSystem.File.CreateText(@"C:\LogTest\Log" + _currentDate.ToString("yyyyMMdd HHmmss fff") + ".log");
+                writer.AutoFlush = true;
 
                 logFile.CreateNewFile(writer);
             }

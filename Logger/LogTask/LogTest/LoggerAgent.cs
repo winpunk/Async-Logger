@@ -31,7 +31,11 @@ namespace LogTest
             try
             {
                 if (_logFile.CreateNewDirectory(_fileSystem))
+                {
                     _writer = _fileSystem.File.CreateText(_filePath);
+                    _writer.AutoFlush = true;
+                }
+                   
 
                 using (_writer)
                 {
