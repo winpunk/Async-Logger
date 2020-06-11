@@ -1,16 +1,16 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("LogComponentTest")]
+[assembly: AssemblyTitle("UnitTest1")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("LogComponentTest")]
+[assembly: AssemblyProduct("UnitTest1")]
 [assembly: AssemblyCopyright("Copyright ©  2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
-[assembly: Guid("4846e1a7-18fc-4df0-9475-10c953d2512c")]
+[assembly: Guid("d5cbb381-5864-41b2-b0ed-79f9d101eb80")]
 
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
