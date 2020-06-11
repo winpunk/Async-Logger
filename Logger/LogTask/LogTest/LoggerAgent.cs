@@ -31,27 +31,20 @@ namespace LogTest
             try
             {
                 if (_logFile.CreateNewDirectory(_fileSystem))
-                {
                     _writer = _fileSystem.File.CreateText(_filePath);
-                    _writer.AutoFlush = true;
-                }
-                   
 
-                using (_writer)
+                _logFile.CreateNewFile(_writer);
+
+                while (!IsExit)
                 {
-                    _logFile.CreateNewFile(_writer);
-
-                    while (!IsExit)
+                    while (logLines.TryTake(out var logLine, 10) && !IsExit)
                     {
-                        while (logLines.TryTake(out var logLine, 10) && !IsExit)
-                        {
-                            _newDayChecker.Check(DateTime.Now, _logFile, ref _writer);
+                        _newDayChecker.Check(DateTime.Now, _logFile, ref _writer);
 
-                            _logFile.WriteLog(_writer, logLine.TimeStampText() + logLine.LineText());
-                        }
-
-                        if (IsQuitWithFlush == true && logLines.Count == 0) IsExit = true;
+                        _logFile.WriteLog(_writer, logLine.TimeStampText() + logLine.LineText());
                     }
+
+                    if (IsQuitWithFlush == true && logLines.Count == 0) IsExit = true;
                 }
             }
             catch (Exception ex)
@@ -61,6 +54,7 @@ namespace LogTest
             finally
             {
                 IsDoneWritting = true;
+                _writer.Close();
             }
         }
     }
